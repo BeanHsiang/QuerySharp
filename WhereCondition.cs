@@ -26,12 +26,15 @@ namespace QuerySharp
                 return string.Empty;
             }
             var sb = new StringBuilder();
-            sb.AppendFormat(" {0}", Relation == ConditionRelation.None ? string.Empty : Relation.ToString() + " ");
+            sb.Append(Relation == ConditionRelation.None ? string.Empty : Relation.ToString() + " ");
             string format;
             switch (Operation)
             {
                 case WhereOperation.Equal:
                     format = "{0} = {1}";
+                    break;
+                case WhereOperation.StringEqual:
+                    format = "{0} = '{1}'";
                     break;
                 case WhereOperation.Like:
                     format = "{0} like '%{1}%'";

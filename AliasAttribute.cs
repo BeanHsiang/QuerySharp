@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QuerySharp
 {
     [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Field, AllowMultiple = false)]
     public class AliasAttribute : Attribute
     {
-        public AliasAttribute(string item)
+        public AliasAttribute(string shrt)
         {
-            Item = item;
+            Short = shrt;
         }
 
         public string Short { get; private set; }

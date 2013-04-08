@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace QuerySharp
 {
@@ -20,7 +17,7 @@ namespace QuerySharp
         internal override string ToSql()
         {
             var sb = new StringBuilder();
-            sb.AppendFormat(" {0}{1}", Relation == ConditionRelation.None ? string.Empty : ConvertOperation(), Field);
+            sb.AppendFormat("{0}{1}", Relation == ConditionRelation.None ? string.Empty : ConvertOperation(), Field);
             if (!string.IsNullOrEmpty(Alias))
             {
                 sb.AppendFormat(" as {0}", Alias);

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace QuerySharp
 {
@@ -21,55 +19,66 @@ namespace QuerySharp
 
         #region Set
 
-        public QueryManager SetSelectCondition(Condition condition)
+        public QueryManager Select(Condition condition)
         {
             SelectCondition = condition;
             BuildSelect();
             return this;
         }
 
-        public QueryManager SetSelectCondition(SelectCondition condition)
-        {
-            SelectCondition = condition;
-            BuildSelect();
-            return this;
-        }
-
-        public QueryManager SetSelectCondition<T>(SelectCondition<T> condition)
-        {
-            SelectCondition = condition;
-            BuildSelect();
-            return this;
-        }
-
-        public QueryManager SetSelectCountCondition<T>(SelectCountCondition<T> condition)
+        public QueryManager SelectCount(Condition condition)
         {
             SelectCountCondition = condition;
             return this;
         }
 
-        public QueryManager SetFromCondition(FromCondition condition)
+        //public QueryManager SetSelectCondition(SelectCondition condition)
+        //{
+        //    SelectCondition = condition;
+        //    BuildSelect();
+        //    return this;
+        //}
+
+        //public QueryManager SetSelectCondition<T>(SelectCondition<T> condition)
+        //{
+        //    SelectCondition = condition;
+        //    BuildSelect();
+        //    return this;
+        //}
+
+        //public QueryManager SetSelectCountCondition<T>(SelectCountCondition<T> condition)
+        //{
+        //    SelectCountCondition = condition;
+        //    return this;
+        //}
+
+        public QueryManager From(Condition condition)
         {
             FromCondition = condition;
             BuildFrom();
             return this;
         }
 
-        public QueryManager SetWhereCondition<T>(WhereCondition<T> condition)
+        //public QueryManager SetFromCondition(FromCondition condition)
+        //{
+        //    return SetFromCondition(condition);
+        //}
+
+        public QueryManager Where(Condition condition)
         {
             WhereCondition = condition;
             BuildWhere();
             return this;
         }
 
-        public QueryManager SetOrderCondition<T>(OrderCondition<T> condition)
+        public QueryManager Order(Condition condition)
         {
             OrderCondition = condition;
             BuildOrder();
             return this;
         }
 
-        public QueryManager SetPageCondition(PageCondition condition)
+        public QueryManager Page(PageCondition condition)
         {
             PageCondition = condition;
             return this;
@@ -86,7 +95,7 @@ namespace QuerySharp
             while (ie.MoveNext())
             {
                 var condition = ie.Current;
-                if (condition != null) _selectBuilder.AppendFormat(" {0}", condition.ToSql());
+                if (condition != null) _selectBuilder.Append(condition.ToSql());
             }
         }
 
@@ -128,37 +137,39 @@ namespace QuerySharp
         public string GenerateSql()
         {
             var sb = new StringBuilder();
-            sb.Append("select");
+            sb.Append("select ");
             sb.Append(_selectBuilder);
-            sb.Append(" from");
+            sb.Append(" from ");
             sb.Append(_fromBuilder);
             if (_whereBuilder.Length > 0)
             {
-                sb.Append(" where");
+                sb.Append(" where ");
                 sb.Append(_whereBuilder);
             }
             if (_orderBuilder.Length > 0)
             {
-                sb.Append(" order by");
+                sb.Append(" order by ");
                 sb.Append(_orderBuilder);
             }
             sb.Append(PageCondition.ToSql());
-            return sb.ToString();
+            sb.Append(";");
+            return Regex.Replace(sb.ToString(), "\\s{2}", " ");
         }
 
         public string GenerateCountSql()
         {
             var sb = new StringBuilder();
-            sb.Append("select");
+            sb.Append("select ");
             sb.Append(SelectCountCondition.ToSql());
-            sb.Append(" from");
+            sb.Append(" from ");
             sb.Append(_fromBuilder);
             if (_whereBuilder.Length > 0)
             {
-                sb.Append(" where");
+                sb.Append(" where ");
                 sb.Append(_whereBuilder);
             }
-            return sb.ToString();
+            sb.Append(";");
+            return Regex.Replace(sb.ToString(), "\\s{2}", " ");
         }
     }
 }

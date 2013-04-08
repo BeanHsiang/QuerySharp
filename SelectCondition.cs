@@ -11,7 +11,7 @@ namespace QuerySharp
 
         internal override string ToSql()
         {
-            return String.Format(" {0}{1}", Relation == ConditionRelation.None ? string.Empty : ",", Field);
+            return String.Format("{0}{1}", Relation == ConditionRelation.None ? string.Empty : ",", Field);
         }
     }
 
@@ -29,7 +29,7 @@ namespace QuerySharp
             {
                 return string.Empty;
             }
-            return String.Format(" {0}{1}", Relation == ConditionRelation.None ? string.Empty : ",", field);
+            return String.Format("{0}{1}", Relation == ConditionRelation.None ? string.Empty : ",", field);
         }
     }
 
@@ -41,7 +41,7 @@ namespace QuerySharp
 
         internal override string ToSql()
         {
-            return String.Format(" {0}count({1})", Relation == ConditionRelation.None ? string.Empty : ",", Field);
+            return String.Format("{0}count({1})", Relation == ConditionRelation.None ? string.Empty : ",", Field);
         }
     }
 
@@ -59,7 +59,7 @@ namespace QuerySharp
             {
                 return string.Empty;
             }
-            return String.Format(" {0}count({1})", Relation == ConditionRelation.None ? string.Empty : ",", field);
+            return String.Format("{0}count({1})", Relation == ConditionRelation.None ? string.Empty : ",", field);
         }
     }
 }

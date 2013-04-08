@@ -4,6 +4,7 @@ namespace QuerySharp
     public enum WhereOperation
     {
         Equal,
+        StringEqual,
         NotEqual,
         Like,
         GreatThan,

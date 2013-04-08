@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace QuerySharp
 {
@@ -74,11 +71,11 @@ namespace QuerySharp
             while (ie.MoveNext())
             {
                 var condition = ie.Current;
-                if (condition != null) sb.AppendFormat(" {0}", condition.ToSql());
+                if (condition != null) sb.Append(condition.ToSql());
             }
             if (sb.Length > 0)
             {
-                sb.Insert(0, " (");
+                sb.Insert(0, "(");
                 sb.Append(")");
                 return sb.ToString();
             }

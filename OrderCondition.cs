@@ -20,7 +20,7 @@ namespace QuerySharp
                 return string.Empty;
             }
             var sb = new StringBuilder();
-            sb.AppendFormat(" {0}", Relation == ConditionRelation.None ? string.Empty : ",");
+            sb.Append(Relation == ConditionRelation.None ? string.Empty : ",");
             sb.AppendFormat("{0} {1}", field, Operation);
             return sb.ToString();
         }

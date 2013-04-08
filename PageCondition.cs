@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace QuerySharp
 {
     public class PageCondition
@@ -39,7 +35,7 @@ namespace QuerySharp
 
         public string ToSql()
         {
-            return string.Format(" limit {0},{1}", PageIndex * PageSize, PageSize);
+            return string.Format(" limit {0},{1}", (PageIndex - 1) * PageSize, PageSize);
         }
     }
 }
