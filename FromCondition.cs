@@ -6,12 +6,14 @@ namespace QuerySharp
     {
         public FromOperation Operation { get; protected set; }
         public string Alias { get; protected set; }
+        public string Association { get; protected set; }
 
-        public FromCondition(string field, FromOperation operation, string alias)
+        public FromCondition(string field, string alias, FromOperation operation = FromOperation.None, string association = "")
         {
             Field = field;
-            Operation = operation;
             Alias = alias;
+            Operation = operation;
+            Association = association;
         }
 
         internal override string ToSql()
@@ -21,6 +23,10 @@ namespace QuerySharp
             if (!string.IsNullOrEmpty(Alias))
             {
                 sb.AppendFormat(" as {0}", Alias);
+            }
+            if (!string.IsNullOrEmpty(Association))
+            {
+                sb.AppendFormat(" on {0}", Association);
             }
             return sb.ToString();
         }
@@ -32,6 +38,9 @@ namespace QuerySharp
             {
                 case FromOperation.None:
                     op = string.Empty;
+                    break;
+                case FromOperation.Simple:
+                    op = ", ";
                     break;
                 case FromOperation.InnerJoin:
                     op = "inner join ";

@@ -30,6 +30,7 @@ namespace QuerySharp
     public enum FromOperation
     {
         None,
+        Simple,
         InnerJoin,
         LeftJoin
     }
