@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AliasAttribute.cs" />
+    <Compile Include="QualifierAttribute.cs" />
     <Compile Include="Condition.cs" />
     <Compile Include="ConditionEnumerator.cs" />
     <Compile Include="Enum.cs" />

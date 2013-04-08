@@ -3,14 +3,14 @@
 namespace QuerySharp
 {
     [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Field, AllowMultiple = false)]
-    public class AliasAttribute : Attribute
+    public class QualifierAttribute : Attribute
     {
-        public AliasAttribute(string shrt)
+        public QualifierAttribute(string prefix)
         {
-            Short = shrt;
+            Prefix = prefix;
         }
 
-        public string Short { get; private set; }
+        public string Prefix { get; private set; }
         public string Item { get; set; }
     }
 }

@@ -20,13 +20,13 @@ namespace QuerySharp
             {
                 return filed;
             }
-            var attrs = fi.GetCustomAttributes(typeof(AliasAttribute), false);
+            var attrs = fi.GetCustomAttributes(typeof(QualifierAttribute), false);
             if (attrs.Length == 0)
             {
                 return fi.Name;
             }
-            var attr = attrs[0] as AliasAttribute;
-            return string.Format("{0}.{1}", attr.Short, string.IsNullOrEmpty(attr.Item) ? fi.Name : attr.Item);
+            var attr = attrs[0] as QualifierAttribute;
+            return string.Format("{0}.{1}", attr.Prefix, string.IsNullOrEmpty(attr.Item) ? fi.Name : attr.Item);
         }
     }
 }
