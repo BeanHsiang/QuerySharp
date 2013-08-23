@@ -11,55 +11,38 @@ namespace QuerySharp
 
         internal override string ToSql()
         {
-            return String.Format("{0}{1}", Relation == ConditionRelation.None ? string.Empty : ",", Field);
+            return string.IsNullOrWhiteSpace(Field) ? string.Empty : String.Format("{0}{1}", Relation == ConditionRelation.None ? string.Empty : ",", Field);
         }
     }
 
-    public class SelectCondition<TField> : Condition<TField>
+    public class SelectCondition<TField> : SelectCondition
     {
         public SelectCondition(TField field)
+            : base(FieldHelper.ConvertField(field))
         {
-            Field = field;
-        }
 
-        internal override string ToSql()
-        {
-            var field = FieldHelper.ConvertField(Field);
-            if (field == null)
-            {
-                return string.Empty;
-            }
-            return String.Format("{0}{1}", Relation == ConditionRelation.None ? string.Empty : ",", field);
         }
     }
 
     public class SelectCountCondition : SelectCondition
     {
-        public SelectCountCondition(string field) : base(field)
+        public SelectCountCondition(string field)
+            : base(field)
         {
         }
 
         internal override string ToSql()
         {
-            return String.Format("{0}count({1})", Relation == ConditionRelation.None ? string.Empty : ",", Field);
+            return string.IsNullOrWhiteSpace(Field) ? string.Empty : String.Format("{0}count({1})", Relation == ConditionRelation.None ? string.Empty : ",", Field);
         }
     }
 
-    public class SelectCountCondition<TField> : Condition<TField>
+    public class SelectCountCondition<TField> : SelectCountCondition
     {
         public SelectCountCondition(TField field)
+            : base(FieldHelper.ConvertField(field))
         {
-            Field = field;
-        }
 
-        internal override string ToSql()
-        {
-            var field = FieldHelper.ConvertField(Field);
-            if (field == null)
-            {
-                return string.Empty;
-            }
-            return String.Format("{0}count({1})", Relation == ConditionRelation.None ? string.Empty : ",", field);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace QuerySharp
         public dynamic Field { get; protected set; }
 
         public Condition First { get; protected set; }
+        public Condition Prev { get; protected set; }
         public Condition Next { get; protected set; }
 
         protected Condition()
@@ -23,6 +24,7 @@ namespace QuerySharp
         {
             condition.Relation = ConditionRelation.Or;
             condition.First = First;
+            condition.Prev = this;
             Next = condition;
             return condition;
         }
@@ -31,6 +33,7 @@ namespace QuerySharp
         {
             condition.Relation = ConditionRelation.And;
             condition.First = First;
+            condition.Prev = this;
             Next = condition;
             return condition;
         }
@@ -71,12 +74,12 @@ namespace QuerySharp
             while (ie.MoveNext())
             {
                 var condition = ie.Current;
-                if (condition != null) sb.Append(condition.ToSql());
+                if (condition != null) sb.AppendFormat(" {0}", condition.ToSql());
             }
-            if (sb.Length > 0)
+            if (sb.Length > 3)
             {
-                sb.Insert(0, "(");
-                sb.Append(")");
+                sb.Insert(0, string.Format("{0}(", Relation == ConditionRelation.None || string.IsNullOrEmpty(Prev.ToSql()) ? string.Empty : Relation.ToString() + " "));
+                sb.Append(" )");
                 return sb.ToString();
             }
             return string.Empty;

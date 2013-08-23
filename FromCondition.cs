@@ -20,11 +20,11 @@ namespace QuerySharp
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0}{1}", Relation == ConditionRelation.None ? string.Empty : ConvertOperation(), Field);
-            if (!string.IsNullOrEmpty(Alias))
+            if (!string.IsNullOrWhiteSpace(Alias))
             {
                 sb.AppendFormat(" as {0}", Alias);
             }
-            if (!string.IsNullOrEmpty(Association))
+            if (!string.IsNullOrWhiteSpace(Association))
             {
                 sb.AppendFormat(" on {0}", Association);
             }

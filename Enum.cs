@@ -11,6 +11,7 @@ namespace QuerySharp
         GreatThanOrEqual,
         LessThan,
         LessThanOrEqual,
+        In,
         Regexp
     }
 

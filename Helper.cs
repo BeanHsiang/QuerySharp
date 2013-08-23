@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System;
 
 namespace QuerySharp
 {
@@ -14,6 +15,10 @@ namespace QuerySharp
             //{
             //    return null;
             //}
+            if (t is string)
+            {
+                return Convert.ToString(t);
+            }
             string filed = t.ToString();
             var fi = t.GetType().GetField(filed, BindingFlags.Static | BindingFlags.Public);
             if (fi == null)
@@ -26,7 +31,7 @@ namespace QuerySharp
                 return fi.Name;
             }
             var attr = attrs[0] as QualifierAttribute;
-            return string.Format("{0}.{1}", attr.Prefix, string.IsNullOrEmpty(attr.Item) ? fi.Name : attr.Item);
+            return string.Format("{0}.{1}", attr.Prefix, string.IsNullOrWhiteSpace(attr.Item) ? fi.Name : attr.Item);
         }
     }
 }

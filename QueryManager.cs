@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace QuerySharp
@@ -12,10 +13,11 @@ namespace QuerySharp
         public Condition OrderCondition { get; private set; }
         public PageCondition PageCondition { get; private set; }
 
-        private StringBuilder _selectBuilder;
-        private StringBuilder _fromBuilder;
-        private StringBuilder _whereBuilder;
-        private StringBuilder _orderBuilder;
+        private string _selectBuilder;
+        private string _fromBuilder;
+        private string _whereBuilder;
+        private string _orderBuilder;
+        private string _groupBuilder = string.Empty;
 
         #region Set
 
@@ -84,52 +86,62 @@ namespace QuerySharp
             return this;
         }
 
+        public QueryManager Group(string content)
+        {
+            _groupBuilder = content;
+            return this;
+        }
+
         #endregion
 
         #region Build
 
         private void BuildSelect()
         {
-            _selectBuilder = new StringBuilder();
+            var sb = new StringBuilder();
             var ie = SelectCondition.GetEnumerator();
             while (ie.MoveNext())
             {
                 var condition = ie.Current;
-                if (condition != null) _selectBuilder.Append(condition.ToSql());
+                if (condition != null) sb.Append(condition.ToSql());
             }
+            _selectBuilder = sb.ToString().Trim();
         }
 
         private void BuildFrom()
         {
-            _fromBuilder = new StringBuilder();
+            var sb = new StringBuilder();
             var ie = FromCondition.GetEnumerator();
             while (ie.MoveNext())
             {
                 var condition = ie.Current;
-                if (condition != null) _fromBuilder.AppendFormat(" {0}", condition.ToSql());
+                if (condition != null) sb.AppendFormat(" {0}", condition.ToSql());
             }
+            _fromBuilder = sb.ToString().Trim();
         }
 
         private void BuildWhere()
         {
-            _whereBuilder = new StringBuilder();
+            var sb = new StringBuilder();
             var ie = WhereCondition.GetEnumerator();
             while (ie.MoveNext())
             {
                 var condition = ie.Current;
-                if (condition != null) _whereBuilder.AppendFormat(" {0}", condition.ToSql());
+                if (condition != null) sb.AppendFormat(" {0}", condition.ToSql());
             }
+            _whereBuilder = sb.ToString().Trim();
         }
 
         private void BuildOrder()
         {
-            _orderBuilder = new StringBuilder();
+            var sb = new StringBuilder();
             var ie = OrderCondition.GetEnumerator();
             while (ie.MoveNext())
             {
                 var condition = ie.Current;
-                if (condition != null) _orderBuilder.AppendFormat(" {0}", condition.ToSql());
+                if (condition != null) sb.AppendFormat(" {0}", condition.ToSql());
             }
+            _orderBuilder = sb.ToString().Trim();
         }
 
         #endregion
@@ -145,6 +157,11 @@ namespace QuerySharp
             {
                 sb.Append(" where ");
                 sb.Append(_whereBuilder);
+            }
+            if (_groupBuilder.Length > 0)
+            {
+                sb.Append(" group by ");
+                sb.Append(_groupBuilder);
             }
             if (_orderBuilder.Length > 0)
             {
@@ -167,6 +184,11 @@ namespace QuerySharp
             {
                 sb.Append(" where ");
                 sb.Append(_whereBuilder);
+            }
+            if (_groupBuilder.Length > 0)
+            {
+                sb.Append(" group by ");
+                sb.Append(_groupBuilder);
             }
             sb.Append(";");
             return Regex.Replace(sb.ToString(), "\\s{2}", " ");

@@ -1,17 +1,25 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace QuerySharp
 {
-    public class WhereCondition<TField> : Condition<TField>
+    public class WhereCondition : Condition
     {
         public object Value { get; protected set; }
         public WhereOperation Operation { get; protected set; }
 
-        public WhereCondition(TField field, WhereOperation operation, object value)
+        //internal WhereCondition()
+        //{
+        //}
+
+        public WhereCondition(string field, WhereOperation operation, object value)
         {
             Field = field;
             Operation = operation;
-            Value = value;
+            if (value != null)
+            {
+                Value = operation == WhereOperation.In ? value : value.ToString().Replace("'", "''").Replace("_", "\\_");
+            }
         }
 
         /// <summary>
@@ -20,13 +28,12 @@ namespace QuerySharp
         /// <returns></returns>
         internal override string ToSql()
         {
-            var field = FieldHelper.ConvertField(Field);
-            if (field == null || Value == null)
+            if (string.IsNullOrEmpty(Field) || Value == null || string.IsNullOrEmpty(Value.ToString()))
             {
                 return string.Empty;
             }
             var sb = new StringBuilder();
-            sb.Append(Relation == ConditionRelation.None ? string.Empty : Relation.ToString() + " ");
+            sb.Append(Relation == ConditionRelation.None || string.IsNullOrEmpty(Prev.ToSql()) ? string.Empty : Relation.ToString() + " ");
             string format;
             switch (Operation)
             {
@@ -54,6 +61,9 @@ namespace QuerySharp
                 case WhereOperation.LessThanOrEqual:
                     format = "{0} <= {1}";
                     break;
+                case WhereOperation.In:
+                    format = "{0} in ({1})";
+                    break;
                 case WhereOperation.Regexp:
                     format = "{0} REGEXP '{1}'";
                     break;
@@ -61,8 +71,17 @@ namespace QuerySharp
                     format = string.Empty;
                     break;
             }
-            sb.AppendFormat(format, field, Value);
+            sb.AppendFormat(format, Field, Value);
             return sb.ToString();
+        }
+    }
+
+    public class WhereCondition<TField> : WhereCondition
+    {
+        public WhereCondition(TField field, WhereOperation operation, object value)
+            : base(FieldHelper.ConvertField(field), operation, value)
+        {
+
         }
     }
 }
